@@ -13,8 +13,8 @@ clock_face = pygame.image.load("mainclock.png")
 clock_face = pygame.transform.scale(clock_face, (600, 600))
 
 hands = {
-    "minute": pygame.transform.scale(pygame.image.load("rightarm.png"), (600, 900)),  # Минутная длиннее и шире
-    "second": pygame.transform.scale(pygame.image.load("leftarm.png"), (50, 500)),  # Секундная тоже увеличена
+    "minute": pygame.transform.scale(pygame.image.load("rightarm.png"), (600, 900)), 
+    "second": pygame.transform.scale(pygame.image.load("leftarm.png"), (50, 500)), 
 }
 
 running = True
