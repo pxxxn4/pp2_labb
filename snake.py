@@ -28,10 +28,12 @@ class Snake:
             sys.exit()
         self.body.insert(0, new_head)
         if new_head == food.pos:
-            global SCORE; SCORE += 1
+            global SCORE
+            SCORE += food.weight  # добавляем очки по весу еды
             food.spawn(self.body)
         else:
             self.body.pop()
+
 
     def draw(self):
         pygame.draw.rect(screen, RED, (self.body[0].x * CELL, self.body[0].y * CELL, CELL, CELL))
@@ -39,11 +41,20 @@ class Snake:
             pygame.draw.rect(screen, YELLOW, (segment.x * CELL, segment.y * CELL, CELL, CELL))
 
 class Food:
-    def __init__(self): self.pos = Point(0, 0); self.spawn([])
+    def __init__(self):
+        self.pos = Point(0, 0)
+        self.weight = 1  # очки за еду
+        self.timer = 0   # таймер исчезновения
+        self.spawn([])
+
     def spawn(self, snake_body):
         while True:
             self.pos = Point(random.randint(0, WIDTH // CELL - 1), random.randint(0, HEIGHT // CELL - 1))
-            if self.pos not in snake_body: break
+            if self.pos not in snake_body:
+                break
+        self.weight = random.choice([1, 2, 3])  # случайный вес еды
+        self.timer = 50  # количество тиков до исчезновения (зависит от FPS)
+
     def draw(self):
         pygame.draw.rect(screen, GREEN, (self.pos.x * CELL, self.pos.y * CELL, CELL, CELL))
 
@@ -74,6 +85,12 @@ while running:
                 snake.dx, snake.dy = 0, 1
             elif event.key == pygame.K_UP and snake.dy == 0:
                 snake.dx, snake.dy = 0, -1
+
+    # Обновляем таймер еды
+    food.timer -= 1
+    if food.timer <= 0:
+        food.spawn(snake.body)  # если еда не была съедена вовремя — переспавнить
+
 
     snake.move()
     snake.draw()
